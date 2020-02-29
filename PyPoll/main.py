@@ -6,7 +6,7 @@ csvpath = os.path.join(dir_path,'election_data.csv')
 txtpath = os.path.join(dir_path,'output.txt')
 
 total_votes = 0
-results = {"votes":{},"percent":{}}
+results = {"votes":{}}
 
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
@@ -25,22 +25,23 @@ with open(csvpath) as csvfile:
             #results["percent"][row[2]] += 1
         
 winner = max(results["votes"], key=results["votes"].get)
-for key in results["percent"]:
-    results["percent"][key] = round((results["percent"][key]/total_votes)*100,3)
-print(results["votes"])
+for key in results["votes"]:
+    results["votes"][key][0] = round((results["votes"][key][0]/total_votes)*100,3)
+result_list = [str(key)+': '+str(results["votes"][key][0])+'% '+'('+str(results["votes"][key][1])+')' for key in results["votes"]]
 
-
-#output = ["Election Results\n","----------------------------\n",f"Total Votes: {total_votes}\n",f"Total: ${p_l_t}\n",f"Average  Change: ${avg_delta}\n",f"Greatest Increase in Profits: {max_mon} (${p_l_max})\n",f"Greatest Decrease in Profits: {min_mon} (${p_l_min})\n"]
+output = ["Election Results\n","----------------------------\n",f"Total Votes: {total_votes}\n","----------------------------\n"]
+output2 = ["----------------------------\n",f"Winner: {winner}\n","----------------------------\n"]
 print("Election Results")
 print("----------------------------")
 print(f"Total Votes: {total_votes}")
 print("----------------------------")
-#for key in results["percent"]:
-   # print(f"{key}: {results["percent"][key]}%")
+[print(str(key)+': '+str(results["votes"][key][0])+'% '+'('+str(results["votes"][key][1])+')') for key in results["votes"]]
 print("----------------------------")
 print(f"Winner: {winner}")
 print("----------------------------")   
 
-#txtfile = open(txtpath,'w')
-#txtfile.writelines(output) 
-#txtfile.close()
+txtfile = open(txtpath,'w')
+txtfile.writelines(output)
+txtfile.writelines("%s\n" % result for result in result_list) 
+txtfile.writelines(output2)
+txtfile.close()
