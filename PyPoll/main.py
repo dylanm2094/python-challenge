@@ -15,18 +15,14 @@ with open(csvpath) as csvfile:
     for row in csvreader:
         total_votes += 1
         if row[2] not in results["votes"]:
-            #results["votes"][row[2]] = 1
-            #results["percent"][row[2]] = 1
             results["votes"][row[2]] = [1,1]
         else:
             results["votes"][row[2]][0] +=1
             results["votes"][row[2]][1] +=1
-            #results["votes"][row[2]] += 1
-            #results["percent"][row[2]] += 1
         
 winner = max(results["votes"], key=results["votes"].get)
 for key in results["votes"]:
-    results["votes"][key][0] = round((results["votes"][key][0]/total_votes)*100,3)
+    results["votes"][key][0] = "{0:.3f}".format((results["votes"][key][0]/total_votes)*100)
 result_list = [str(key)+': '+str(results["votes"][key][0])+'% '+'('+str(results["votes"][key][1])+')' for key in results["votes"]]
 
 output = ["Election Results\n","----------------------------\n",f"Total Votes: {total_votes}\n","----------------------------\n"]
